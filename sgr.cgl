@@ -1,0 +1,22 @@
+Error 00047. 0x340010 (Thread 0x09A8):
+Resource from different RTL:
+SysFreeMem(0x00F66BA0) 
+
+Call Tree:
+   0x0045C8E1(=sgr.exe:0x01:05B8E1)
+   0x0045C7CD(=sgr.exe:0x01:05B7CD)
+   0x00463A0E(=sgr.exe:0x01:062A0E)
+   0x00463576(=sgr.exe:0x01:062576)
+   0x0046283C(=sgr.exe:0x01:06183C)
+   0x0046374C(=sgr.exe:0x01:06274C)
+
+The memory block (0x00F90F50) [size: 88 bytes] was allocated with malloc
+Call Tree:
+   0x00463B58(=sgr.exe:0x01:062B58)
+   0x00463CF8(=sgr.exe:0x01:062CF8)
+   0x0CD0E577(=CG32.DLL:0x01:00D577)
+   0x0040E681(=sgr.exe:0x01:00D681)
+   0x00408B9A(=sgr.exe:0x01:007B9A) C:\Documents and Settings\Admin\іабочий стол\RN3AUS\136\Hell_Opera_QRSS_DDS-ctrl\SGR\sgr1.cpp#926
+   0x00405095(=sgr.exe:0x01:004095) C:\Documents and Settings\Admin\іабочий стол\RN3AUS\136\Hell_Opera_QRSS_DDS-ctrl\SGR\sgr1.cpp#597
+
+------------------------------------------
