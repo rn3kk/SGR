@@ -4,8 +4,8 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="sgr.exe"/>
-    <OBJFILES value="sgr.obj sgr1.obj Filters.obj Sound.obj WaveFile.obj common.obj 
-      ..\SGR_SRC\TFilter.obj TFilter.obj TIIRLPF.obj TIIRBPF2.obj"/>
+    <OBJFILES value="sgr.obj sgr1.obj Filters.obj Sound.obj WaveFile.obj ..\SGR_SRC\TFilter.obj 
+      TFilter.obj TIIRLPF.obj TIIRBPF2.obj common.obj"/>
     <RESFILES value="sgr.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -54,8 +54,6 @@
       <FILE FILENAME="Filters.cpp" FORMNAME="" UNITNAME="Filters" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Sound.cpp" FORMNAME="" UNITNAME="Sound" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="WaveFile.cpp" FORMNAME="" UNITNAME="WaveFile" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="common.cpp" FORMNAME="" UNITNAME="common" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="common.h" FORMNAME="" UNITNAME="common.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\SGR_SRC\TFilter.cpp" FORMNAME="" UNITNAME="TFilter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="TFilter.cpp" FORMNAME="" UNITNAME="TFilter.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="TFilter.h" FORMNAME="" UNITNAME="TFilter.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -63,6 +61,8 @@
       <FILE FILENAME="TIIRLPF.h" FORMNAME="" UNITNAME="TIIRLPF.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="TIIRBPF2.cpp" FORMNAME="" UNITNAME="TIIRBPF2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="TIIRBPF2.h" FORMNAME="" UNITNAME="TIIRBPF2.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="common.cpp" FORMNAME="" UNITNAME="common" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="common.h" FORMNAME="" UNITNAME="common.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

@@ -1,3 +1,5 @@
+#include "Filters.h"
+
 const int NCoef = 12;
 const int NCoef10 = 10;
 const int NCoef8 = 8;

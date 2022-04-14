@@ -1,12 +1,17 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <string>
 #pragma hdrstop
 
-#include "sgr1.h"
+
+
+
 #include "filters.h"
 #include "TIIRLPF.h"
 #include "TIIRBPF2.h"
+#include "common.h"
+#include "sgr1.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -25,9 +30,6 @@
 #define LEN_HOUR 360//360 // длина буфера на один час с накоплением при обновлении раз в 10 сек
 #define BW_F 20.0 // фильтр частотомера
 #define DF_LEN 1000 //усреднение частоты
-
-//float iir1777_12k(float NewSample);
-//float iir172_12k(float NewSample);
 
 TForm1 *Form1;
 TSound *snd;
@@ -98,6 +100,8 @@ AnsiString UploadExecStr;
 
 int X1,X2,Y1,Y2,X_SCALE;
 
+
+
 /////////////////////////////////////////////////////////////////////////////////
 DWORD WINAPI AudioRxThread( LPVOID )
  {
@@ -116,63 +120,23 @@ DWORD WINAPI AudioRxThread( LPVOID )
   Usr=Usred=Uf=Uf2=0;
 
    while(1)
-  {AUDIO_RX_WORKED=true;
+  {
+   AUDIO_RX_WORKED=true;
    try{
     if(F0<5450)
-    { if(processWav)
-     { int len=wf->read(x,x,SND_LEN);
-       if(!wf->AvailableRead || len!=SND_LEN)
-       {wf->close(); processWav=false;
-        Form1->StatusBar1->Panels->Items[6]->Text="";
-        snd->openIn(SND_FD,16,1,SND_LEN);
-        snd->read(x,x,SND_LEN);
-       }
-     }
-     else snd->read(x,x,SND_LEN);
+    {
+     snd->read(x,x,SND_LEN);
     }
     else ////////// 12500Hz
     {
-     if(processWav)
-     { int len=wf->read(x2,x2,SND_LEN2);
-       if(!wf->AvailableRead || len!=SND_LEN2)
-       {wf->close(); processWav=false;
-        Form1->StatusBar1->Panels->Items[6]->Text="";
-        snd->openIn(SND_FD2,16,1,SND_LEN2);
-        snd->read(x2,x2,SND_LEN2);
-       }
-     }
-     else snd->read(x2,x2,SND_LEN2);
-
-     // перенести с высокой F0 вниз
-     for(int i=0; i<SND_LEN2; i++)
-     {
-      x[i/4]=(filter111->filter(filter11->filter(filter1->filter(x2[i])))) * cos(ph2);
-      ph2=ph2+dph2; if(ph2>TWOPI)ph2=ph2-TWOPI;
-     }
+      snd->read(x2,x2,SND_LEN2);
+      // перенести с высокой F0 вниз
+      //convertFrom48000_toDown(x2, x, filter1, filter11, filter111);
     }////////////end 12500
 
-    if(RECORDING)
-     { //if(Form1->Label2->Visible) Form1->Label2->Visible=false;
-       //else Form1->Label2->Visible=true;
-       try{
-       if(rec->Format.nSamplesPerSec==SND_FD) {rec->write(x,x,SND_LEN);bytes_recorded+=SND_LEN*2;}
-       else {rec->write(x2,x2,SND_LEN2);bytes_recorded+=SND_LEN2*2;}
-       AnsiString s;
-       if( bytes_recorded<1000000)s.sprintf("%s --> %d kB",ExtractFileName(recfile), bytes_recorded/1000);
-       else s.sprintf("%s --> %.2f MB",ExtractFileName(recfile), bytes_recorded/1000000.0);
-       Form1->Label2->Caption=s;
-          }catch(...){Form1->Label2->Caption="Record errror!";}
-     }
-
     //найти мгновенный средний уровень
-     float uu=0;
-     for(int i=0; i<SND_LEN; i++)uu=uu+fabs(x[i]);
-     uu=uu/SND_LEN;
-     if(Usr==0) Usr=uu;
-     Usr=0.7*Usr+0.3*uu;
-     AnsiString sinp;
-     if(Usr>0)sinp.sprintf("Volume %.1f dB",20*log10(Usr));
-     Form1->StatusBar1->Panels->Items[2]->Text=sinp;
+     std::string s = getAvgMediumLevel(x, Usr);
+     Form1->StatusBar1->Panels->Items[2]->Text=s.c_str();
 
      // подавление импульсных помех
      cntClip=0;
@@ -185,7 +149,7 @@ DWORD WINAPI AudioRxThread( LPVOID )
 
 //snd->write(x,x,SND_LEN);
      // средний уровень после подавления импульсов
-     uu=0;
+     float uu=0;
      for(int i=0; i<SND_LEN; i++)uu=uu+(x[i]*x[i]);
      uu=uu/SND_LEN;
      if(Usred==0) Usred=uu;

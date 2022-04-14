@@ -1,11 +1,15 @@
+
 #include <math.h>
 #include <values.h>
 #include <mem.h>
+
 #include "TIIRLPF.h"
 
 #ifndef TWOPI
 #define TWOPI 2*M_PI
 #endif
+
+
 
 TIIRLPF::TIIRLPF(float Fs, int Nz)
 { /*
@@ -44,4 +48,3 @@ float TIIRLPF::filter(float * x, int n)
    return Gain;
 }
 //------------------------------------------------------------------------------
- 

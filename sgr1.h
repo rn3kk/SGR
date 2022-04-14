@@ -8,7 +8,6 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include "WaveFile.h"
-#include "Filters.h"
 #include "Sound.h"
 #include <Menus.hpp>
 #include <inifiles.hpp>
