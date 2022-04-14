@@ -2,47 +2,71 @@
 <!-- C++Builder XML Project -->
 <PROJECT>
   <MACROS>
-    <VERSION value="BCB.05.03"/>
+    <VERSION value="BCB.06.00"/>
     <PROJECT value="sgr.exe"/>
-    <OBJFILES value="sgr.obj sgr1.obj Filters.obj Sound.obj WaveFile.obj"/>
+    <OBJFILES value="sgr.obj sgr1.obj Filters.obj Sound.obj WaveFile.obj common.obj 
+      ..\SGR_SRC\TFilter.obj TFilter.obj TIIRLPF.obj TIIRBPF2.obj"/>
     <RESFILES value="sgr.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES) sgr1.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="Vclx50.lib Vcl50.lib"/>
-    <SPARELIBS value="Vcl50.lib Vclx50.lib"/>
-    <PACKAGES value="Vcl50.bpi Vclx50.bpi Vclmid50.bpi Vcldb50.bpi Inet50.bpi Inetdb50.bpi 
-      Vclbde50.bpi vcldbx50.bpi vclie50.bpi webmid50.bpi bcbie50.bpi"/>
-    <PATHCPP value=".;"/>
+    <LIBRARIES value="vclx.lib vcl.lib rtl.lib"/>
+    <SPARELIBS value="rtl.lib vcl.lib vclx.lib"/>
+    <PACKAGES value="rtl.bpi vcl.bpi vclx.bpi dsnap.bpi dbrtl.bpi vcldb.bpi inet.bpi inetdb.bpi 
+      bdertl.bpi vcldbx.bpi vclie.bpi webdsnap.bpi bcbie.bpi"/>
+    <PATHCPP value=".;..\SGR_SRC"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
-    <LINKER value="tlink32"/>
-    <USERDEFINES value=""/>
+    <LINKER value="ilink32"/>
+    <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="sgr.cpp"/>
-    <INCLUDEPATH value="$(BCB)\include;$(BCB)\include\vcl"/>
-    <LIBPATH value="$(BCB)\lib\obj;$(BCB)\lib"/>
+    <INCLUDEPATH value="..\SGR_SRC;$(BCB)\include;$(BCB)\include\vcl"/>
+    <LIBPATH value="..\SGR_SRC;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par"/>
+    <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -boa"/>
-    <CFLAG1 value="-O2 -H=$(BCB)\lib\vcl50.csm -Hc -Vx -Ve -ff -X- -a8 -4 -b- -k- -vi -c -tW 
-      -tWM"/>
-    <PFLAGS value="-$Y- -$L- -$D- -v -JPHNE -M"/>
+    <IDLCFLAGS value="-I..\SGR_SRC -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp 
+      -D_DEBUG -boa"/>
+    <CFLAG1 value="-Od -Vx -Ve -ff -X- -r- -a8 -4 -b- -k -y -v -vi- -c -tW -tWM"/>
+    <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
-    <AFLAGS value="/mx /w2 /zn"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
+    <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
     <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
     <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
+    <OTHERFILES value=""/>
   </LINKER>
+  <FILELIST>
+      <FILE FILENAME="sgr.cpp" FORMNAME="" UNITNAME="sgr" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="sgr.res" FORMNAME="" UNITNAME="sgr" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="sgr1.cpp" FORMNAME="Form1" UNITNAME="sgr1" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Filters.cpp" FORMNAME="" UNITNAME="Filters" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Sound.cpp" FORMNAME="" UNITNAME="Sound" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="WaveFile.cpp" FORMNAME="" UNITNAME="WaveFile" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="common.cpp" FORMNAME="" UNITNAME="common" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="common.h" FORMNAME="" UNITNAME="common.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\SGR_SRC\TFilter.cpp" FORMNAME="" UNITNAME="TFilter" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TFilter.cpp" FORMNAME="" UNITNAME="TFilter.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TFilter.h" FORMNAME="" UNITNAME="TFilter.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TIIRLPF.cpp" FORMNAME="" UNITNAME="TIIRLPF" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TIIRLPF.h" FORMNAME="" UNITNAME="TIIRLPF.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TIIRBPF2.cpp" FORMNAME="" UNITNAME="TIIRBPF2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TIIRBPF2.h" FORMNAME="" UNITNAME="TIIRBPF2.h" CONTAINERID="" DESIGNCLASS="" LOCALCOMMAND=""/>
+  </FILELIST>
+  <BUILDTOOLS>
+  </BUILDTOOLS>
+
   <IDEOPTIONS>
 [Version Info]
 IncludeVerInfo=1
@@ -71,23 +95,6 @@ ProductName=SGR A*
 ProductVersion=1.0.0.0
 Comments=January 2022
 
-[Excluded Packages]
-$(BCB)\Bin\dclocx50.bpl=Borland Sample Imported ActiveX Controls
-$(BCB)\Bin\dclite50.bpl=Borland Integrated Translation Environment
-$(BCB)\Bin\bcbsmp50.bpl=Borland C++ Sample Components
-$(BCB)\Bin\applet50.bpl=Borland Control Panel Applet Package
-$(BCB)\Bin\dcltqr50.bpl=TeeChart 5.0 for QuickReport Components Design Package
-$(BCB)\Bin\DCLIB50.bpl=InterBase Data Access Components
-$(BCB)\Bin\mfcwizard.bpl=MFC Wizard
-$(BCB)\Bin\bcb2kaxserver50.bpl=Borland C++Builder COM Server Components Sample Package
-$(BCB)\Bin\DCLNMF50.bpl=NetMasters Fastnet Tools
-$(BCB)\Bin\dcl31w50.bpl=Delphi 1.0 Compatibility Components
-$(BCB)\Bin\dclado50.bpl=Borland ADO DB Components
-C:\WINDOWS\system32\ibsmp50.bpl=Borland C++ InterBase Alerter Component
-$(BCB)\Bin\dclqrt50.bpl=QuickReport Components
-$(BCB)\Bin\dcltee50.bpl=TeeChart 5.0 Components
-$(BCB)\Bin\dcldss50.bpl=Borland Decision Cube Components
-
 [HistoryLists\hlIncludePath]
 Count=1
 Item0=$(BCB)\include;$(BCB)\include\vcl
@@ -109,9 +116,14 @@ DebugSourceDirs=$(BCB)\source\vcl
 
 [Parameters]
 RunParams=
+Launcher=
+UseLauncher=0
+DebugCWD=
 HostApplication=
 RemoteHost=
 RemotePath=
+RemoteLauncher=
+RemoteCWD=
 RemoteDebug=0
 
 [Compiler]
@@ -123,5 +135,10 @@ LinkCGLIB=0
 AddServerUnit=1
 AddClientUnit=1
 PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
   </IDEOPTIONS>
 </PROJECT>

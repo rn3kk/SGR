@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 224
-  Top = 140
+  Left = 238
+  Top = 155
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Spectrum Grabber SGR A*  (ver 1.0)'
