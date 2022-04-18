@@ -104,13 +104,15 @@ int X1,X2,Y1,Y2,X_SCALE;
 
 /////////////////////////////////////////////////////////////////////////////////
 DWORD WINAPI AudioRxThread( LPVOID )
- {
+{
   ph=M_PI/256.0;
   ph2=M_PI/256.0;
   processWav=false;
-  memset(x,0,sizeof(x));memset(x1,0,sizeof(x1));
+  memset(x,0,sizeof(x));
+  memset(x1,0,sizeof(x1));
   memset(x2,0,sizeof(x2));
-  memset(xf,0,sizeof(xf));memset(xf2,0,sizeof(xf2));
+  memset(xf,0,sizeof(xf));
+  memset(xf2,0,sizeof(xf2));
   memset(df0,0,sizeof(df0));
   memset(U,0,sizeof(U));
   memset(Uslow,0,sizeof(Uslow));
@@ -119,35 +121,37 @@ DWORD WINAPI AudioRxThread( LPVOID )
 
   Usr=Usred=Uf=Uf2=0;
 
-   while(1)
+  while(1)
   {
-   AUDIO_RX_WORKED=true;
-   try{
-    if(F0<5450)
+    AUDIO_RX_WORKED=true;
+    try
     {
-     snd->read(x,x,SND_LEN);
-    }
-    else ////////// 12500Hz
-    {
-      snd->read(x2,x2,SND_LEN2);
-      // перенести с высокой F0 вниз
-      //convertFrom48000_toDown(x2, x, filter1, filter11, filter111);
-    }////////////end 12500
+      if(F0<5450)
+      {
+       snd->read(x,x,SND_LEN);
+      }
+      else ////////// 12500Hz
+      {
+        snd->read(x2,x2,SND_LEN2);
+        // перенести с высокой F0 вниз
+        convertFrom48000_toDown(x2, x, filter1, filter11, filter111, dph2);
+      }////////////end 12500
 
-    //найти мгновенный средний уровень
-     std::string s = getAvgMediumLevel(x, Usr);
-     Form1->StatusBar1->Panels->Items[2]->Text=s.c_str();
+      //найти мгновенный средний уровень
+      std::string s = getAvgMediumLevel(x, Usr);
+      Form1->StatusBar1->Panels->Items[2]->Text=s.c_str();
 
-     // подавление импульсных помех
-     cntClip=0;
-     if(NB_ENABLE){
-       for(int i=0; i<SND_LEN; i++) if(fabs(x[i])>Usr*CLIP_POROG) {x[i]=0;cntClip++;}
-     }
-     AnsiString snb; snb.sprintf("NB %d%%",100*cntClip/SND_LEN);
-     if(cntClip>=0.01*SND_LEN) Form1->StatusBar1->Panels->Items[4]->Text=snb;
-     else Form1->StatusBar1->Panels->Items[4]->Text="";
+      // подавление импульсных помех
+      cntClip=0;
+      if(NB_ENABLE)
+        cntClip = nb(x, Usr*CLIP_POROG);
 
-//snd->write(x,x,SND_LEN);
+      AnsiString snb; snb.sprintf("NB %d%%",100*cntClip/SND_LEN);
+      if(cntClip>=0.01*SND_LEN)
+        Form1->StatusBar1->Panels->Items[4]->Text=snb;
+      else
+        Form1->StatusBar1->Panels->Items[4]->Text="";
+
      // средний уровень после подавления импульсов
      float uu=0;
      for(int i=0; i<SND_LEN; i++)uu=uu+(x[i]*x[i]);
@@ -156,66 +160,34 @@ DWORD WINAPI AudioRxThread( LPVOID )
      Usred=0.95*Usred+0.05*uu;
 
  ///////////// частотомер //////////////////////////////////////////////////////
- {
-        BPF_F->filter(x,SND_LEN,xf);
-        BPF_F1->filter(xf,SND_LEN,xf);BPF_F11->filter(xf,SND_LEN,xf);
-        BPF_F2->filter(x,SND_LEN,xf2);
-     for(int k0=0; k0<SND_LEN-SND_LEN/10; k0+=SND_LEN/10)
-     {  float uuf=0, uuf2=0;
-        for(int i=0; i<SND_LEN/10; i++) uuf=uuf+fabs(xf[i+k0]);
-        Uf=uuf;//0.7*Uf+0.3*(10*uuf/SND_LEN);
-        for(int i=0; i<SND_LEN/10; i++) uuf2=uuf2+fabs(xf2[i+k0]);
-        Uf2=uuf2;//0.7*Uf2+0.3*(10*uuf2/SND_LEN);
-        SNRF=0;
-        if(Uf<Uf2)SNRF=20.0*log10(Uf/(Uf2-Uf));
-        float ddf=0;
-        if(SNRF > 6.0)
-        {
-         //счет переходов через ноль
-         for(int i=0; i<SND_LEN/10; i++)
-         { if(i+k0+1>=SND_LEN) continue;
-           if(xf[i+k0]<0 && xf[i+k0+1]>=0) CNT_Z++;
-           if(xf[i+k0]>=0 && xf[i+k0+1]<0) CNT_Z++;
-           CNT_Z_ALL++;
-         }
-         if(1.0*CNT_Z_ALL/SND_FD>=2.0)
-         {ddf=(1.0*CNT_Z/2.0/CNT_Z_ALL)-BPF_F->getF0();
-          ddf=ddf*SND_FD;
-          if(1.0*CNT_Z_ALL/SND_FD>=10.0){CNT_Z_ALL=CNT_Z_ALL/2; CNT_Z=CNT_Z/2;}
-          df0[cnt_F]=ddf;
-          cnt_F++; cnt_F=cnt_F%DF_LEN;
-          int cf=1;
-          float df=0;
-          for(int i=0; i<DF_LEN; i++)
-          {
-           if(df0[i]!=0 && fabs(df0[i])<20.0) {cf++; df+=df0[i];}
-          }
-          deltaF=df/cf;
-          d_deltaF=0;
-          for(int i=0; i<DF_LEN; i++)
-          { if(df0[i]!=0 && fabs(df0[i])<20.0) {d_deltaF+=(df0[i]-deltaF)*(df0[i]-deltaF);}
-          }
-          d_deltaF=3.0*sqrt(d_deltaF)/cf;
-          if(cf<10) d_deltaF=10.0;
-         }
-         AnsiString sf;
-         if(d_deltaF>0)
-         {if(Form1->autoDCFHGA1->Checked)sf.sprintf("dF=%.3f+-%.3f Hz",deltaF,d_deltaF);
-          else sf.sprintf("dF=%.3f Hz (%.3f Hz)",CalibratedDF, deltaF);
-         }
-         else sf.sprintf("dF counting...");
-         Form1->StatusBar1->Panels->Items[5]->Text=sf;
-         if(Form1->autoDCFHGA1->Checked && d_deltaF>0 && d_deltaF<0.01)
-         { CalibratedDF=deltaF;
-           AnsiString sfv; sfv.sprintf("constant dF=%.3f Hz",CalibratedDF);
-           Form1->fixedvalue1->Caption=sfv;
-           if(!processWav)Form1->fixedvalue1Click(NULL);
-           else Form1->fixedvalue1->Checked=true;
-         }
-        }// end if SNR
-        else if(!processWav)Form1->StatusBar1->Panels->Items[5]->Text="NO CARRIER";
-     }//end for k0
- }
+
+     freqCounter(x, xf, xf2, df0, deltaF, d_deltaF, BPF_F, BPF_F1, BPF_F2);
+
+     AnsiString sf;
+     if(d_deltaF>0)
+     {
+       if(Form1->autoDCFHGA1->Checked)
+         sf.sprintf("dF=%.3f+-%.3f Hz",deltaF,d_deltaF);
+       else
+         sf.sprintf("dF=%.3f Hz (%.3f Hz)",CalibratedDF, deltaF);
+     }
+     else
+       sf.sprintf("dF counting...");
+     Form1->StatusBar1->Panels->Items[5]->Text=sf;
+     if(Form1->autoDCFHGA1->Checked && d_deltaF>0 && d_deltaF<0.01)
+     {
+       CalibratedDF=deltaF;
+       AnsiString sfv; sfv.sprintf("constant dF=%.3f Hz",CalibratedDF);
+       Form1->fixedvalue1->Caption=sfv;
+       if(!processWav)
+         Form1->fixedvalue1Click(NULL);
+       else
+         Form1->fixedvalue1->Checked=true;
+     }
+     else if(!processWav)
+       Form1->StatusBar1->Panels->Items[5]->Text="NO CARRIER";
+
+
  //////// конец частототмера /////////////////////////////////////
 
     //предварительно отфильтровать
